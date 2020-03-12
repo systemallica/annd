@@ -12,5 +12,7 @@ eigenvalues = diag(eigenvalues);
 
 reducedDataset = (X' * eigenvectors)';
 
+reconstructedDataset = (eigenvectors * reducedDataset) + mean(X);
+
 % estimation of the error
-%sqrt(mean(mean((X-Xhat).^2)));
+error = sqrt(mean(mean((X-reconstructedDataset).^2)));
