@@ -7,17 +7,15 @@ if istable(laserpred), laserpred=table2array(laserpred); end
 lag = 50;
 [trainData, trainTarget] = getTimeSeriesTrainData(lasertrain, lag);
 
-% plot(predictTarget)
-
 % 1st: train feedforward net
-net=feedforwardnet(50,'trainlm');
+net=feedforwardnet(80,'trainlm');
+net.divideFcn='dividetrain';
 net.trainParam.epochs=985;
+net=init(net);
 net=train(net,trainData,trainTarget);   
 
 % initialize output
 predictedTargets = [];
-
-disp(size(laserpred,1))
 
 for i=1:(size(laserpred,1))
     % predict value using the last n points from the training dataset
@@ -46,9 +44,3 @@ plot(predictedTargets);
 hold on;
 plot(laserpred);
 legend('predicted', 'real');
-% 2nd: use as recurrent network
-
-% a good prediction should find a "dip" in the plot(as shown in figure 2b)
-% Time series data with a recurrent neural network
-% Get the first segment and predict the next one
-% Closed loop, use your own predictions and compare to real data
