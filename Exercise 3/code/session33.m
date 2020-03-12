@@ -2,7 +2,6 @@
 % 3 that has been expanded out into a 256 longvector.
 load threes -ASCII;
 
-
 % PCA 1 component
 [eigenvalues1, reducedDataset1, reconstructedDataset1] = PCA(1,threes);
 % PCA 2 component
@@ -16,8 +15,8 @@ load threes -ASCII;
 
 plot(eigenvalues);
 
+% Plot some numbers from reconstructed PCA datasets
 colormap('gray');
-
 subplot(3,2,1);
 imagesc(reshape(reconstructedDataset1(45,:),16,16),[0,1]);
 title('PCA 1 component');
@@ -33,3 +32,15 @@ title('PCA 4 components');
 subplot(3,2,5);
 imagesc(reshape(threes(45,:),16,16),[0,1]);
 title('Original dataset');
+
+% Calculate errors for PCAs from 1 to 50 components
+errors = [];
+for i=1:50
+    [eigenvalues, reducedDataset, reconstructedDataset] = PCA(i,threes);
+    error = sqrt(mean(mean((threes-reconstructedDataset).^2)));
+    errors = [errors; error];
+end
+
+subplot(3,2,6);
+plot(errors);
+title('errors');
