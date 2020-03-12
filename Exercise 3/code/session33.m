@@ -33,14 +33,27 @@ subplot(3,2,5);
 imagesc(reshape(threes(45,:),16,16),[0,1]);
 title('Original dataset');
 
-% Calculate errors for PCAs from 1 to 50 components
+% Calculate errors for PCAs from 1 to 256 components
 errors = [];
-for i=1:50
+for i=1:256
     [eigenvalues, reducedDataset, reconstructedDataset] = PCA(i,threes);
     error = sqrt(mean(mean((threes-reconstructedDataset).^2)));
     errors = [errors; error];
 end
 
-subplot(3,2,6);
+% error for w=256 should be 0 but it's 0.3 because of the lost info between
+% conversions
+
+clf
+subplot(2,1,1);
 plot(errors);
 title('errors');
+
+cumeigenvalues = [];
+for i=1:256
+    cumeigenvalues = [cumeigenvalues; cumsum(eigenvalues(i:end))];
+end
+
+subplot(2,1,2);
+plot(cumeigenvalues);
+title('cumulative eigenvalues');
