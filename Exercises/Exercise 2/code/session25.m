@@ -14,6 +14,7 @@ net.trainParam.epochs=985;
 net=init(net);
 net=train(net,trainData,trainTarget);   
 
+disp(1);
 % initialize output
 predictedTargets = [];
 
@@ -35,12 +36,18 @@ for i=1:(size(laserpred,1))
     
     % predict next point
     predictedTarget = net(data);
+    
+    disp(1.1);
 
     % add predicted point to array
     predictedTargets = [predictedTargets; predictedTarget];    
 end
 
+disp(2);
+
 plot(predictedTargets);
 hold on;
 plot(laserpred);
 legend('predicted', 'real');
+
+disp(3);
