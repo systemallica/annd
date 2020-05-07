@@ -75,7 +75,7 @@ imds = imageDatastore(fullfile(rootFolder, categories), 'LabelSource', 'folderna
 % associated with each image. The labels are automatically assigned from
 % the folder names of the image files. Use |countEachLabel| to summarize
 % the number of images per category.
-tbl = countEachLabel(imds)
+tbl = countEachLabel(imds);
 %%
 % Because |imds| above contains an unequal number of images per category,
 % let's first adjust it, so that the number of images in the training set
@@ -139,7 +139,7 @@ end
 % classify new data, and extract network activations from specific layers.
 
 % Load MatConvNet network into a SeriesNetwork
-convnet = helperImportMatConvNet(cnnMatFile)
+convnet = helperImportMatConvNet(cnnMatFile);
 
 %%
 % |convnet.Layers| defines the architecture of the CNN. 
@@ -152,8 +152,13 @@ convnet.Layers
 % input size requirements. The one used in this example requires image
 % input that is 227-by-227-by-3.
 
-% Inspect the first layer
-convnet.Layers(1)
+% Inspect first layers
+all = convnet.Layers;
+a = convnet.Layers(1);
+b = convnet.Layers(2);
+c = convnet.Layers(3);
+d = convnet.Layers(4);
+e = convnet.Layers(5);
 
 %%
 % The intermediate layers make up the bulk of the CNN. These are a series
@@ -167,7 +172,7 @@ convnet.Layers(1)
 % classification layer has 1000 classes from the ImageNet dataset. 
 
 % Inspect the last layer
-convnet.Layers(end)
+f = convnet.Layers(end);
 
 % Number of class names for ImageNet classification task
 numel(convnet.Layers(end).ClassNames)
@@ -219,38 +224,38 @@ figure
 montage(w1)
 title('First convolutional layer weights')
 
-% %%
-% % Notice how the first layer of the network has learned filters for
-% % capturing blob and edge features. These "primitive" features are then
-% % processed by deeper network layers, which combine the early features to
-% % form higher level image features. These higher level features are better
-% % suited for recognition tasks because they combine all the primitive
-% % features into a richer image representation [5].
-% %
-% % You can easily extract features from one of the deeper layers using the
-% % |activations| method. Selecting which of the deep layers to choose is a
-% % design choice, but typically starting with the layer right before the
-% % classification layer is a good place to start. In |convnet|, the this
-% % layer is named 'fc7'. Let's extract training features using that layer.
-% featureLayer = 'fc7';
-% trainingFeatures = activations(convnet, trainingSet, featureLayer, ...
-%     'MiniBatchSize', 32, 'OutputAs', 'columns');
-% %%
-% % Note that the activations are computed on the GPU and the 'MiniBatchSize'
-% % is set 32 to ensure that the CNN and image data fit into GPU memory.
-% % You may need to lower the 'MiniBatchSize' if your GPU runs out of memory.
-% %
-% % Also, the activations output is arranged as columns. This helps speed-up
-% % the multiclass linear SVM training that follows.
-% 
-% %% Train A Multiclass SVM Classifier Using CNN Features
-% % Next, use the CNN image features to train a multiclass SVM classifier. A
-% % fast Stochastic Gradient Descent solver is used for training by setting
-% % the |fitcecoc| function's 'Learners' parameter to 'Linear'. This helps
-% % speed-up the training when working with high-dimensional CNN feature
-% % vectors, which each have a length of 4096.
-% 
-% % Get training labels from the trainingSet
+%%
+% Notice how the first layer of the network has learned filters for
+% capturing blob and edge features. These "primitive" features are then
+% processed by deeper network layers, which combine the early features to
+% form higher level image features. These higher level features are better
+% suited for recognition tasks because they combine all the primitive
+% features into a richer image representation [5].
+%
+% You can easily extract features from one of the deeper layers using the
+% |activations| method. Selecting which of the deep layers to choose is a
+% design choice, but typically starting with the layer right before the
+% classification layer is a good place to start. In |convnet|, the this
+% layer is named 'fc7'. Let's extract training features using that layer.
+featureLayer = 'fc7';
+trainingFeatures = activations(convnet, trainingSet, featureLayer, ...
+    'MiniBatchSize', 32, 'OutputAs', 'columns');
+%%
+% Note that the activations are computed on the GPU and the 'MiniBatchSize'
+% is set 32 to ensure that the CNN and image data fit into GPU memory.
+% You may need to lower the 'MiniBatchSize' if your GPU runs out of memory.
+%
+% Also, the activations output is arranged as columns. This helps speed-up
+% the multiclass linear SVM training that follows.
+
+%% Train A Multiclass SVM Classifier Using CNN Features
+% Next, use the CNN image features to train a multiclass SVM classifier. A
+% fast Stochastic Gradient Descent solver is used for training by setting
+% the |fitcecoc| function's 'Learners' parameter to 'Linear'. This helps
+% speed-up the training when working with high-dimensional CNN feature
+% vectors, which each have a length of 4096.
+
+% Get training labels from the trainingSet
 % trainingLabels = trainingSet.Labels;
 % 
 % % Train multiclass SVM classifier using a fast linear solver, and set
@@ -277,11 +282,10 @@ title('First convolutional layer weights')
 % confMat = confusionmat(testLabels, predictedLabels);
 % 
 % % Convert confusion matrix into percentage form
-% confMat = bsxfun(@rdivide,confMat,sum(confMat,2))
-% %%
+% confMat = bsxfun(@rdivide,confMat,sum(confMat,2));
 % 
-% % Display the mean accuracy
-% mean(diag(confMat))
+% %% Display the mean accuracy
+% mean(diag(confMat));
 % 
 % %% Try the Newly Trained Classifier on Test Images
 % % You can now apply the newly trained classifier to categorize new images.
@@ -292,11 +296,9 @@ title('First convolutional layer weights')
 % 
 % % Extract image features using the CNN
 % imageFeatures = activations(convnet, img, featureLayer);
-% %%
 % 
-% % Make a prediction using the classifier
-% label = predict(classifier, imageFeatures)
-% 
+% %% Make a prediction using the classifier
+% label = predict(classifier, imageFeatures);
 % 
 % %% References
 % % [1] Deng, Jia, et al. "Imagenet: A large-scale hierarchical image

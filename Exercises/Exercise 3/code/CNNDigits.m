@@ -78,12 +78,12 @@ rng(1) % For reproducibility
 %           classificationLayer()];  %+-3min
       
 layers = [imageInputLayer([28 28 1])
-  convolution2dLayer(5,12)
+  convolution2dLayer(5,24)
   reluLayer
   
   maxPooling2dLayer(2,'Stride',2)
   
-  convolution2dLayer(5,24)
+  convolution2dLayer(5,36)
   reluLayer  
   
   fullyConnectedLayer(10)
@@ -166,7 +166,7 @@ layers = [imageInputLayer([28 28 1])
 % descent with momentum. Set the maximum number of epochs at 15 (an epoch
 % is a full training cycle on the whole training data), and start the
 % training with an initial learning rate of 0.0001.
-options = trainingOptions('sgdm','MaxEpochs',15, ...
+options = trainingOptions('sgdm','MaxEpochs',30, ...
 	'InitialLearnRate',0.0001,'OutputFcn',@plotTrainingAccuracy);  
 
 %% Train the Network Using Training Data
